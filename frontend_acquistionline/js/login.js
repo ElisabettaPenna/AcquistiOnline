@@ -6,6 +6,7 @@ fetch('http://localhost:8080/acquistionline/magazzini')
 .then(data => {
     let table = `
         <tr>
+            <th>Codice articolo</th>
             <th>Nome articolo</th>
             <th>Descrizione</th>
             <th>Prezzo</th>
@@ -17,6 +18,7 @@ fetch('http://localhost:8080/acquistionline/magazzini')
 
         table +=`
             <tr>
+                <td>${data[i].cod_articolo}</td>
                 <td>${data[i].nome_articolo}</td>
                 <td>${data[i].descrizione}</td>
                 <td>${data[i].prezzo_unitario}</td>
@@ -53,7 +55,8 @@ function checkCodCliente() {
         
         if(msg   != 'ok' ) {
             alert('Mi dispiace, utente non registrato!');
-        } else {
+        } 
+        else {
             window.location.replace('./bookForm.html');
         }
     })

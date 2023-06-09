@@ -17,7 +17,7 @@ function createBooking() {
     //recupero i dati dalla session storage
     let utConnessoJSON = localStorage.getItem("data");
     let utConnesso = JSON.parse(utConnessoJSON)
-    console.log(utConnesso)
+   
     //prendo i dati che mi mancano dal form
     let cod_cliente = utConnesso.codCliente;
     let cod_articolo = document.getElementById('inputIdArticoli').value;
@@ -34,13 +34,12 @@ function createBooking() {
             'Content-Type': 'application/json'
         }, body: dataSend
     })
-    .then(response => {
-        if(response.status == 201) {
-            alert('hai acquistato un articolo!')
-        }else if(response.status==500){
-            alert('articolo non disponibile')
-        }
-    });
+    .then(response =>response.json() )
+    .then(data => {
+      
+       alert(data.message)
+ })
+ ;
 
 }
 
@@ -65,6 +64,7 @@ btnChange.addEventListener('click', changeBooking);
 function changeBooking() {
 
     //recupero i dati dalla session storage
+   
     let OrdiniJSON = localStorage.getItem("Ordini");
     let utOrdini = JSON.parse(OrdiniJSON)
     let utConnessoJSON = localStorage.getItem("data");
@@ -93,13 +93,14 @@ cod_articolo = utOrdini[i].cod_articolo;
             'Content-Type': 'application/json'
         }, body: dataSend
     })
-    .then(response => {
-        console.log(response.status)
-        if(response.status == 200) {
-            alert('Modifica effettuata!')
-        }else if(response.status==500){
-            alert('articolo non disponibile')
-        }
+    .then(response => response.json()
+    
+    )
+    .then(data => {
+
+           alert(data.message)
     });
 
-}
+
+} 
+

@@ -16,6 +16,7 @@ function mostraTabellaArticoli(){
   .then(data => {
       let table = `
           <tr>
+              <th>Codice articolo</th>
               <th>Nome articolo</th>
               <th>Descrizione</th>
               <th>Prezzo</th>
@@ -27,6 +28,7 @@ function mostraTabellaArticoli(){
   
           table +=`
               <tr>
+              <td>${data[i].cod_articolo}</td>
                   <td>${data[i].nome_articolo}</td>
                   <td>${data[i].descrizione}</td>
                   <td>${data[i].prezzo_unitario}</td>

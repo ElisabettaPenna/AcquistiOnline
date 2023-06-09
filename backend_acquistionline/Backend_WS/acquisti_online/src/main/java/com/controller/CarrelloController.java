@@ -76,7 +76,13 @@ public class CarrelloController {
 	// si può aggiungere un carrello
 	@PostMapping(value="carrello", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Void> addCarrello(@RequestBody CarrelloInfo info, UriComponentsBuilder builder){
-		
+		if(info.getQt_articoli() <= 0) {
+			
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+		if(serviceMag.getMagazzinoByCodArticolo(info.getCod_articolo()) == null) {
+			throw new ResourceNotFound("Codice articolo "+info.getCod_articolo()+" non presente");
+		}
 		//da tabella Magazzino trovo la quantità disponibile per quel articolo
 		int qtMax = serviceMag.getMagazzinoByCodArticolo(info.getCod_articolo()).getQt_disponibile();
 		//Articoli già comprati 	
@@ -95,11 +101,12 @@ public class CarrelloController {
 		BeanUtils.copyProperties(info, cr);
 		boolean flag = serviceCarr.addCarrello(cr);
 		if(!flag) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder.path("carrello/{codCliente}").buildAndExpand(cr.getCod_cliente()).toUri());
-		return new ResponseEntity<Void>(headers,HttpStatus.CREATED);
+		return new ResponseEntity<>(headers,HttpStatus.CREATED);
 	}
 		
 		//si può aggiornare un carrello
@@ -111,7 +118,11 @@ public class CarrelloController {
 			BeanUtils.copyProperties(cr, crInfo);
 			if(!serviceCarr.existsById(crInfo.getId())) {
 				return new ResponseEntity<CarrelloInfo>(crInfo,HttpStatus.NOT_FOUND);
-			} 
+			}
+			if(info.getQt_articoli() < 0) {
+				crInfo.setMessage("Inserire una quantità maggiore di 0");
+				return new ResponseEntity<CarrelloInfo>(crInfo,HttpStatus.FORBIDDEN);
+			}
 			//posti disponibili per il volo
 			int qtMax = serviceMag.getMagazzinoByCodArticolo(info.getCod_articolo()).getQt_disponibile();    
 			//biglietti già comprati per il volo
@@ -132,7 +143,7 @@ public class CarrelloController {
 				}
 			
 			serviceCarr.updateCarrello(cr);
-			
+			crInfo.setMessage("Modifica effettuata!");
 			return new ResponseEntity<CarrelloInfo>(crInfo, HttpStatus.OK);
 		}
 

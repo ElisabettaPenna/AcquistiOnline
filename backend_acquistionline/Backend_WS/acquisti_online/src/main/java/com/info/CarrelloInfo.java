@@ -22,8 +22,20 @@ public class CarrelloInfo {
 	
 	
 	private double prezzo_unitario;
-
+    
+	private String message;
 	
+	
+	
+	
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 	public double getPrezzo_unitario() {
 		return prezzo_unitario;
 	}

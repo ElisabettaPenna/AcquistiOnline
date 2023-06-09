@@ -46,9 +46,9 @@ public class ClienteController {
 	public ResponseEntity<ClienteInfo> getClienteById(@PathVariable("codCliente") String codCliente){
 		Cliente cliente = new Cliente();
 		if(!clientservice.existsClienteByCodCliente(codCliente)) {
-			
-			
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			ClienteInfo notFound = new ClienteInfo();
+			notFound.setMessage("Not Found");
+			return new ResponseEntity<ClienteInfo>(notFound,HttpStatus.NOT_FOUND);
 		}
 		cliente = clientservice.getClienteByCodCliente(codCliente);
 		ClienteInfo cInfo = new ClienteInfo();
